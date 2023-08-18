@@ -35,7 +35,8 @@ exports.updateTransaction = (req, res) => {
     const { type, amount } = req.body;
     let userId;
 
-    const fetchTransactionSQL = "SELECT user_id FROM Transaction WHERE id = ?";
+    const fetchTransactionSQL = "SELECT user_id FROM transaction WHERE id = ?";
+    const updateTransactionSQL = "UPDATE transaction SET type = ?, amount = ? WHERE id = ?"
 
     // const sql = 'UPDATE transactions SET type = ?, amount = ? WHERE id = ?';
     db.query(fetchTransactionSQL, [transactionId], (fetchErr,fetchResult) => {
@@ -46,7 +47,7 @@ exports.updateTransaction = (req, res) => {
         }
         userId = fetchResult[0].user_id
 
-        const updateTransactionSQL = "UPDATE transaction SET type = ?, amount = ?, WHERE id = ?"
+        
 
         db.query(
             updateTransactionSQL, [type,amount,transactionId],(updateErr) => {
@@ -79,7 +80,7 @@ exports.updateTransaction = (req, res) => {
 
 exports.deleteTransaction = (req, res) => {
     const transactionId = req.params.id;
-    const sql = 'DELETE FROM transactions WHERE id = ?';
+    const sql = 'DELETE FROM transaction WHERE id = ?';
     db.query(sql, [transactionId], (err) => {
         if (err) {
         console.error(err);
@@ -92,7 +93,7 @@ exports.deleteTransaction = (req, res) => {
 
 
 exports.getAllTransactions = (req, res) => {
-    const sql = 'SELECT * FROM transactions';
+    const sql = 'SELECT * FROM transaction';
     
     db.query(sql, (err, result) => {
     if (err) {
@@ -107,7 +108,7 @@ exports.getAllTransactions = (req, res) => {
 
 exports.getTransactionsByUser = (req, res) => {
     const userId = req.params.userId;
-    const sql = 'SELECT * FROM transactions WHERE user_id = ?';
+    const sql = 'SELECT * FROM transaction WHERE user_id = ?';
     db.query(sql, [userId], (err, result) => {
     if (err) {
         console.error(err);
@@ -121,7 +122,7 @@ exports.getTransactionsByUser = (req, res) => {
 
 exports.getTransactionsByType = (req, res) => {
     const type = req.params.type;
-    const sql = 'SELECT * FROM transactions WHERE type = ?';
+    const sql = 'SELECT * FROM transaction WHERE type = ?';
     db.query(sql, [type], (err, result) => {
     if (err) {
         console.error(err);
@@ -136,7 +137,7 @@ exports.getTransactionsByType = (req, res) => {
 exports.getTransactionsByTypeAndUser = (req, res) => {
     const type = req.params.type;
     const userId = req.params.userId;
-    const sql = 'SELECT * FROM transactions WHERE type = ? AND user_id = ?';
+    const sql = 'SELECT * FROM transaction WHERE type = ? AND user_id = ?';
     db.query(sql, [type, userId], (err, result) => {
     if (err) {
         console.error(err);

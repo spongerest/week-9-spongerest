@@ -4,15 +4,21 @@ const bodyParser = require('body-parser');
 const Redis = require('ioredis');
 
 const app = express();
-const port = 5000;
+const port = 6063;
 
-const redisClient = new Redis();
+const r = new Redis({
+    host: 'containers-us-west-118.railway.app',
+    password : "PioptdoxC4ErQ58Ucra1",
+    port: 5910,
+});
+
+// const redisClient = new Redis();
 
 app.use(bodyParser.json());
 
 app.use('/api', apiRoutes);
 
-redisClient.on("connect", () =>{
+r.on("connect", () =>{
     console.log("Connected Redis")
 })
 

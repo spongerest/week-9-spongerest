@@ -4,13 +4,27 @@ const Redis = require('ioredis');
 
 exports.createTransaction = (req, res) => {
     const { user_id, type, amount } = req.body;
-    const sql = 'INSERT INTO transactions (user_id, type, amount) VALUES (?, ?, ?)';
+    const sql = 'INSERT INTO transaction (user_id, type, amount) VALUES (?, ?, ?)';
     db.query(sql, [user_id, type, amount], (err, result) => {
         if (err) {
         console.error(err);
         res.status(500).json({ error: 'An error occurred while adding the transaction' });
         } else {
-        res.json({ message: 'Transaction Added', id: result.insertId });
+            const insertedTransactionId = result.insertId;
+
+            const redisClient = new Redis();
+            const redisKey = `user:${user_id}`
+
+            redisClient.del(redisKey, (delErr, deletedaccount) => {
+                if(delErr){
+                    console.error(delErr);
+                }else{
+                    console.log(`Delete Cache user_id : ${user_id}`)
+                }
+                redisClient.quit();
+            });
+
+        res.json({ message: 'Transaction Added', id: insertedTransactionId });
         }
     });
 };
@@ -19,14 +33,46 @@ exports.createTransaction = (req, res) => {
 exports.updateTransaction = (req, res) => {
     const transactionId = req.params.id;
     const { type, amount } = req.body;
-    const sql = 'UPDATE transactions SET type = ?, amount = ? WHERE id = ?';
-    db.query(sql, [type, amount, transactionId], (err) => {
-        if (err) {
-        console.error(err);
-        res.status(500).json({ error: 'An error occurred while updating the transaction' });
-        } else {
-        res.json({ message: 'Transaction updated successfully' });
+    let userId;
+
+    const fetchTransactionSQL = "SELECT user_id FROM Transaction WHERE id = ?";
+
+    // const sql = 'UPDATE transactions SET type = ?, amount = ? WHERE id = ?';
+    db.query(fetchTransactionSQL, [transactionId], (fetchErr,fetchResult) => {
+        if (fetchErr || fetchResult.length === 0) {
+        console.error(fetchErr || "Transaction Not Found");
+        res.status(404).json({ error: "Transaction Not Found" });
+        return
         }
+        userId = fetchResult[0].user_id
+
+        const updateTransactionSQL = "UPDATE transaction SET type = ?, amount = ?, WHERE id = ?"
+
+        db.query(
+            updateTransactionSQL, [type,amount,transactionId],(updateErr) => {
+                if (updateErr){
+                    console.error(updateErr);
+                    res.status(500).json({
+                        error:"An ERROR occurred while updating transaction",
+                    })
+                }
+                else {
+                    res.json({ message: 'Transaction updated successfully' });
+
+                    const redisClient = new Redis();
+                    const redisKey = `user:${userId}`;
+
+                    redisClient.del(redisKey, (delErr,deletedaccount) => {
+                        if (delErr) {
+                            console.error(delErr);
+                        } else {
+                            console.log(`Deleted Cache  for user id : ${userId}`)
+                        }
+                        redisClient.quit();
+                    })
+                }
+            }
+        )
     });
 };
 

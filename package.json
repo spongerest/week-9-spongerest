@@ -1,0 +1,31 @@
+{
+  "name": "restu_windrip_weekly_w9",
+  "version": "1.0.0",
+  "description": "Simple Mutasi Mbanking Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "simple",
+    "mutasi",
+    "mbanking",
+    "nodejs",
+    "express",
+    "mysql",
+    "redis"
+  ],
+  "author": "RE$TV",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "ioredis": "^5.3.2",
+    "mysql": "^2.18.1",
+    "redis": "^4.6.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

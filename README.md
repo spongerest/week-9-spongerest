@@ -1,5 +1,29 @@
 # Membuat Mutasi Transaksi
 
+## Link Post Transaction
+https://weary-pig-tux.cyclic.cloud/api/transactions
+
+## Link Edit Transaction by ID
+https://weary-pig-tux.cyclic.cloud/api/transactions/1
+
+## Link Get All Transactions
+https://weary-pig-tux.cyclic.cloud/api/transactions
+
+## Link Delete Trasanction by ID
+https://weary-pig-tux.cyclic.cloud/api/transactions/2
+
+## Link Get User by ID
+https://weary-pig-tux.cyclic.cloud/api/users/1
+
+## Link Get Trasanctions by ID
+https://weary-pig-tux.cyclic.cloud/api/transactions/user/1
+
+## Link Get Transactions by Type
+https://weary-pig-tux.cyclic.cloud/api/transactions/type/income
+
+## Link Get History Transactions by ID & Type
+https://weary-pig-tux.cyclic.cloud/api/transactions/type/income/user/2
+
 ## Melakukan installing sesuai kebutuhan project
 
 ### Dependencies
@@ -26,3 +50,21 @@
 ## Membuat .gitignore agar saat melakukan push project tersebut tidak memiliki size yang terlalu besar
 
 ![alt text](/assets/2w9.png)
+
+## Membuat Tabel Menggunakan Syntax MySQL
+
+1. ### Membuat Tabel User & Trasaction
+![alt text](/assets/3w9.png)
+
+2. ### Membuat Syntax Post Users & Transactions
+![alt text](/assets/4w9.png)
+
+3. ### Membuat Syntax Get All Users Info & Total Transactions by ID
+![alt text](/assets/5w9.png)
+
+4. ### Membuat Syntax Get Ballance
+![alt text](/assets/6w9.png)
+
+5. ### Succes Connecting Database to Node.JS locall
+![alt text](/assets/7w9.png)
+

@@ -1,6 +1,10 @@
 const db = require('../models/db');
 const Redis = require('ioredis');
-
+const r = new Redis({
+    host: 'containers-us-west-118.railway.app',
+    password : "PioptdoxC4ErQ58Ucra1",
+    port: 5910,
+});
 
 exports.createTransaction = (req, res) => {
     const { user_id, type, amount } = req.body;
@@ -12,16 +16,15 @@ exports.createTransaction = (req, res) => {
         } else {
             const insertedTransactionId = result.insertId;
 
-            const redisClient = new Redis();
             const redisKey = `user:${user_id}`
 
-            redisClient.del(redisKey, (delErr, deletedaccount) => {
+            r.del(redisKey, (delErr, deletedaccount) => {
                 if(delErr){
                     console.error(delErr);
                 }else{
                     console.log(`Delete Cache user_id : ${user_id}`)
                 }
-                redisClient.quit();
+                r.quit();
             });
 
         res.json({ message: 'Transaction Added', id: insertedTransactionId });
@@ -60,16 +63,15 @@ exports.updateTransaction = (req, res) => {
                 else {
                     res.json({ message: 'Transaction updated successfully' });
 
-                    const redisClient = new Redis();
                     const redisKey = `user:${userId}`;
 
-                    redisClient.del(redisKey, (delErr,deletedaccount) => {
+                    r.del(redisKey, (delErr,deletedaccount) => {
                         if (delErr) {
                             console.error(delErr);
                         } else {
                             console.log(`Deleted Cache  for user id : ${userId}`)
                         }
-                        redisClient.quit();
+                        r.quit();
                     })
                 }
             }
